@@ -10,6 +10,4 @@ export class RegisterDto {
     @IsNotEmpty()
     @IsString()
     password!: string;
-    @IsNumber()
-    id!: number;
 }
