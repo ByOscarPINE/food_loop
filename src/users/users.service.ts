@@ -23,6 +23,18 @@ export class UsersService {
     return this.userRepository.save(newUser)
   }
 
+  async findByEmail(email: string){
+    return this.userRepository
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.email = :email', { email })
+      .getOne();
+  }
+
+  async findById(id: number) {
+    return this.userRepository.findOne({ where: { id } });
+  }
+  
   findAll() {
     return `This action returns all users`;
   }
