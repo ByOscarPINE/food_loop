@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { FoodsService } from './foods.service';
 import { CreateFoodDto } from './dto/create-food.dto';
 import { UpdateFoodDto } from './dto/update-food.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('foods')
+// @UseGuards(AuthGuard('jwt'))
 export class FoodsController {
   constructor(private readonly foodsService: FoodsService) {}
 
