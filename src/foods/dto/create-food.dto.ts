@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsNumber, IsString } from "class-validator"
+import { Category } from "src/categories/entities/category.entity"
 
 export class CreateFoodDto {
     @IsString()
@@ -12,8 +13,8 @@ export class CreateFoodDto {
     price!: number
     @IsString()
     image!: string
-    @IsString()
     @IsNotEmpty()
-    category!: string
+    @IsNotEmpty()
+    category!: number
     isAviable!: boolean
-}
+}   
