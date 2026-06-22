@@ -26,12 +26,14 @@ export class FoodsService {
   }
 
   async findAll() {
-    const foods = await this.foodRepository.find()
+    const foods = await this.foodRepository.find({
+      relations: {category:true}
+    })
     return foods;
   } 
 
   async findOne(id: number) {
-    const food = await this.foodRepository.findOneBy({id})
+    const food = await this.foodRepository.findOne({where: {id}, relations: {category: true}})
     if(!food) 
       throw new NotFoundException (`comida con el id ${id} no encontrada`)
     return food;
