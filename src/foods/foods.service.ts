@@ -1,11 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateFoodDto } from './dto/create-food.dto';
 import { UpdateFoodDto } from './dto/update-food.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Food } from './entities/food.entity';
 import { Repository } from 'typeorm';
 import { Category } from 'src/categories/entities/category.entity';
-
 @Injectable()
 export class FoodsService {
 
@@ -14,7 +13,8 @@ export class FoodsService {
     private foodRepository: Repository<Food>,
     
     @InjectRepository(Category)
-    private categoryRepository: Repository<Category>
+    private categoryRepository: Repository<Category>,
+    
   ) {}
 
   async create(createFoodDto: CreateFoodDto) {
@@ -45,6 +45,14 @@ export class FoodsService {
     if(!category)
       throw new NotFoundException("categoria no encontrada")
     const updatedFood = this.foodRepository.merge(food, {...updateFoodDto, category})
+    return this.foodRepository.save(updatedFood);
+  }
+
+  async updateImage(id: number, image : Express.Multer.File) {
+    const food = await this.foodRepository.findOneBy({id});
+    if(!food)
+      throw new NotFoundException (`Error al actualziar la imagen de la comida, no se encontro la comida con el id ${id}`)
+    const updatedFood = this.foodRepository.merge(food, {...food, image: image.filename})
     return this.foodRepository.save(updatedFood);
   }
 
