@@ -32,6 +32,41 @@ export class FoodsService {
     return foods;
   } 
 
+  async findAllByName(name: string) {
+    const foods = await this.foodRepository.find({
+      where: { name },
+      relations: { category: true },
+    });
+    return foods;
+  }
+
+  async findAllByCategory(categoryName: string) {
+    const foods = await this.foodRepository.find({
+      where: { category: { name: categoryName } },
+      relations: { category: true },
+    });
+    return foods;
+  }
+
+  async findAllByFilters(filters: { category?: string; name?: string }) {
+    const where: any = {};
+
+    if (filters.name) {
+      where.name = filters.name;
+    }
+
+    if (filters.category) {
+      where.category = { name: filters.category };
+    }
+
+    const foods = await this.foodRepository.find({
+      where,
+      relations: { category: true },
+    });
+
+    return foods;
+  } 
+
   async findOne(id: number) {
     const food = await this.foodRepository.findOne({where: {id}, relations: {category: true}})
     if(!food) 
@@ -61,4 +96,6 @@ export class FoodsService {
   remove(id: number) {
     return `This action removes a #${id} food`;
   }
+
+
 }

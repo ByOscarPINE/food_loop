@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, ParseIntPipe, UploadedFile, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, ParseIntPipe, UploadedFile, BadRequestException, Query } from '@nestjs/common';
 import { FoodsService } from './foods.service';
 import { CreateFoodDto } from './dto/create-food.dto';
 import { UpdateFoodDto } from './dto/update-food.dto';
@@ -33,7 +33,7 @@ export class FoodsController {
 
 @Patch(':id/image')
   @UseInterceptors(
-    FileInterceptor('image', { // 'image' es la clave que buscará en el form-data
+    FileInterceptor('image', {
       storage: diskStorage({
         destination: './uploads/foods',
         filename: (req, file, callback) => {
@@ -44,6 +44,7 @@ export class FoodsController {
       }),
     }),
   )
+  
   async updateImage(
     @Param('id', ParseIntPipe) id: number,
     @UploadedFile() file: Express.Multer.File,
@@ -59,4 +60,13 @@ export class FoodsController {
   remove(@Param('id') id: string) {
     return this.foodsService.remove(+id);
   }
+  
+  @Get()
+  findAllFoods(
+    @Query('category') category?: string,
+    @Query('name') name?: string,
+  ) {
+    return this.foodsService.findAllByFilters({ category, name });
+  }
+
 }
